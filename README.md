@@ -27,7 +27,7 @@ GROUP BY o.date_created;
 ```
 ## Время выполнения запроса без оптимизации запроса
 
-![image](https://github.com/OlegMatrenitsky/cloud-services-engineer-dbops-project/blob/main/no-index.png)
+![image](https://github.com/OlegMatrenitsky/cloud-services-engineer-dbops-project/blob/main/no_index.png)
 
 ```sql
 new_store=> EXPLAIN (ANALYZE)
