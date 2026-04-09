@@ -1,0 +1,53 @@
+name: Main workflow
+on:
+  push:
+    branches:
+      - main
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+    # Клонируем репозиторий
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Проверка доступности БД
+    - name: Wait for DB
+      run: |
+        for i in {1..10}; do
+          nc -z ${{ secrets.DB_HOST }} ${{ secrets.DB_PORT }} && echo "DB is up" && exit 0
+          echo "Waiting for DB..."
+          sleep 3
+        done
+        echo "DB is not reachable"
+        exit 1
+
+    # Запуск миграций Flyway через Docker
+    - name: Apply migrations with Flyway
+      run: |
+        docker run --rm \
+          -v $(pwd)/migrations:/flyway/sql \
+          flyway/flyway:latest \
+          -url=jdbc:postgresql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }} \
+          -user=${{ secrets.DB_USER }} \
+          -password=${{ secrets.DB_PASSWORD }} \
+          -connectRetries=5 \
+          migrate
+
+    # Установка автотестов
+    - name: Download and setup autotests binaries
+      run: |
+        wget -qO- cloud-services-engineer.gitlab.yandexcloud.net/practicum-cloud-services/dbops-autotests/-/package_files/1/download > dbopstest
+        chmod +x ./dbopstest
+        mv ./dbopstest /usr/local/bin/dbopstest
+
+    # Запуск тестов
+    - name: Test
+      run: |
+        dbopstest \
+          -test.v \
+          -host=${{ secrets.DB_HOST }} \
+          -port=${{ secrets.DB_PORT }} \
+          -user=${{ secrets.DB_USER }} \
+          -password=${{ secrets.DB_PASSWORD }} \
+          -db=${{ secrets.DB_NAME }}
