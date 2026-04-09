@@ -3,12 +3,12 @@
 CREATE DATABASE new_store;
 ```
 
-## Создание пользователя и выдача прав
+## Создание пользователя и выдача прав на подключение к базе
 ```sql
 CREATE USER new_store_user WITH PASSWORD 'ForlN8k3U_Enf83';
 GRANT ALL PRIVILEGES ON DATABASE new_store TO new_store_user;
 ```
-## Подключаемся к базе new_store и выдаём пользователю права на подключение к базе
+## Подключаемся к базе new_store и выдача прав пользователю 
 ```sql
 GRANT ALL ON SCHEMA public TO new_store_user;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO new_store_user;
