@@ -8,7 +8,7 @@ CREATE DATABASE new_store;
 CREATE USER new_store_user WITH PASSWORD 'ForlN8k3U_Enf83';
 GRANT ALL PRIVILEGES ON DATABASE new_store TO new_store_user;
 ```
-## Подключаемся к базе new_store и выдаём пользователю права
+## Подключаемся к базе new_store и выдаём пользователю права на подключение к базе
 ```sql
 GRANT ALL ON SCHEMA public TO new_store_user;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO new_store_user;
@@ -27,7 +27,7 @@ GROUP BY o.date_created;
 ```
 ## Время выполнения запроса без оптимизации запроса
 
-![image](hhttps://github.com/OlegMatrenitsky/cloud-services-engineer-dbops-project/blob/main/no-index.png)
+![image](https://github.com/OlegMatrenitsky/cloud-services-engineer-dbops-project/blob/main/no-index.png)
 
 ```sql
 new_store=> EXPLAIN (ANALYZE)
@@ -73,7 +73,7 @@ ORDER BY o.date_created;
 
 ## Время выполнения запроса после создания индекса
 
-![image](hhttps://github.com/OlegMatrenitsky/cloud-services-engineer-dbops-project/blob/main/index.png)
+![image](https://github.com/OlegMatrenitsky/cloud-services-engineer-dbops-project/blob/main/index.png)
 
 ## И план запроса после создания индекса
 
